@@ -1,0 +1,12 @@
+.landing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.block{
+    width: 40%;
+    height: 50%;
+    text-align: left;
+}
