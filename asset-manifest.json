@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/ImagePricing/static/css/main.d3297f62.css",
+    "main.js": "/ImagePricing/static/js/main.2198038c.js",
+    "static/js/787.d37de791.chunk.js": "/ImagePricing/static/js/787.d37de791.chunk.js",
+    "static/media/rocket-1.svg": "/ImagePricing/static/media/rocket-1.00b2b6d6cfb66a63f52d6947f3744896.svg",
+    "index.html": "/ImagePricing/index.html",
+    "main.d3297f62.css.map": "/ImagePricing/static/css/main.d3297f62.css.map",
+    "main.2198038c.js.map": "/ImagePricing/static/js/main.2198038c.js.map",
+    "787.d37de791.chunk.js.map": "/ImagePricing/static/js/787.d37de791.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d3297f62.css",
+    "static/js/main.2198038c.js"
+  ]
+}
