@@ -11,13 +11,14 @@
 
 h1 {
   font-family: 'Raleway';
-  font-size: 50pt;
+  font-size: 5vw;
   font-weight: 500;
   letter-spacing: 2pt;
 }
 
 p {
   font-family: 'Raleway';
+  font-size: 1vw;
   font-size: 12pt;
   font-weight: 300;
   letter-spacing: 3pt;
@@ -56,4 +57,9 @@ p {
       opacity: 0;
       transform: translate(30px, 0px);
   }
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
 }
