@@ -1,0 +1,29 @@
+.landing {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.block{
+    max-width: 40%;
+    max-height: 50%;
+    text-align: left;
+}
+
+.begin {
+    display: flex;
+    flex-direction: row;
+    font-weight: 300;
+}
+
+.begin:hover {
+    transform: translate(5px, 0px);
+    cursor: pointer;
+    font-weight: 1000;
+    animation: none;
+}
+
+.begin:hover .arrow div{
+    animation: none;
+}
