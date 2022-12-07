@@ -1,0 +1,12 @@
+[
+    {
+        "description": "Image 0 is amazing",
+        "value": 500,
+        "artist": "Image 0's artist is spectacular"
+    },
+    {
+        "description": "Image 1 is great",
+        "value": 420,
+        "artist": "Image 1's artist is decent, ig"
+    }
+]
