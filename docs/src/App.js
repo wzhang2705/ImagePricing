@@ -6,6 +6,8 @@ import { BrowserRouter as Router,
   Routes,
   Route
 } from "react-router-dom";
+import TransitionPage from './components/transition-page/transition-page';
+import EndingPage from './components/transition-page/ending-page';
 
 function App() {
   var basePath = "/ImagePricing";
@@ -15,7 +17,9 @@ function App() {
         <Routes>
           <Route path={`${basePath}/`} element={<LandingPage basePath={`${basePath}`}/>} />
           <Route path={`${basePath}/begin`}  element={<AuctionPage basePath={`${basePath}`}/>} />
-          <Route path={`${basePath}/image/:id`}  element={<ImagePage basePath={`${basePath}`}/>} />
+          <Route path={`${basePath}/image`}  element={<ImagePage basePath={`${basePath}`}/>} />
+          <Route path={`${basePath}/bigreveal`} element={<TransitionPage basePath={`${basePath}`}/>} />
+          <Route path={`${basePath}/end`} element={<EndingPage basePath={`${basePath}`}/>} />
         </Routes>
       </Router>
     </div>

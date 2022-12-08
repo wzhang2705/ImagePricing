@@ -1,3 +1,27 @@
-.image {
+.wrapper {
     align-items: center;
+    max-width: 90%;
+    margin: auto;
+}
+
+.image {
+    margin: auto;
+    padding: 50px;
+    background-color: #b7b3cfe8;
+    border-radius: 20px;
+    box-shadow: 5px 10px 10px #7e7b8e78;
+    width: 80%;
+}
+
+.piece {
+    height: 50vh;
+    align-items: center;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+img {
+    margin: auto;
 }

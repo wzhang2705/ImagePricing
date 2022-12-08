@@ -1,0 +1,26 @@
+transition-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.begin-centered {
+    display: flex;
+    flex-direction: row;
+    font-weight: 300;
+    align-items: center;
+    justify-content: center;
+}
+
+.begin-centered:hover {
+    transform: translate(5px, 0px);
+    cursor: pointer;
+    font-weight: 1000;
+    animation: none;
+}
+
+
+.begin-centered:hover .arrow div{
+    animation: none;
+}

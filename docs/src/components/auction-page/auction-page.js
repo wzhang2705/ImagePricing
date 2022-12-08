@@ -7,7 +7,7 @@ const AuctionPage = (props) => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
-    navigate(props.basePath + '/image/1');
+    navigate(props.basePath + '/image');
   }
 
   return (
