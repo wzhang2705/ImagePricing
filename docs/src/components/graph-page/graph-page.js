@@ -3,9 +3,11 @@ import './graph-page.css';
 import React, { useEffect, useState } from 'react';
 import settings from "./config"
 import CanvasJSReact from './canvasjs.react'
-import Carousel from 'react-bootstrap/Carousel'
+import Modal from 'react-bootstrap/Modal'
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+const NUMIMAGES = 24;
 
 const image_pairs = [
   [15, 1], [18, 2], [3, 14], [13, 4],
@@ -13,25 +15,41 @@ const image_pairs = [
   [17, 9], [21, 10], [22, 11], [24, 19]
 ]
 
+const generatedImages = [1, 2, 4, 5, 6, 8, 9, 10, 11, 14, 19, 20];
+
 const GraphPage = (props) => { 
   // const navigate = useNavigate();
   const [data, setData] = useState(null)
   const [averageValuations, setAverageValuations] = useState(null) // for individual average valuation graphs
-  const [coptions, setCoptions] = useState(null)
+  const [averageAccuracy, setAverageAccuracy] = useState(null) // accuracy
+  const [coptions, setCoptions] = useState({})
+  const [show, setShow] = useState(false)
+  const [activeImage, setActiveImage] = useState(1)
+  const [overallValuation, setOverallValuation] = useState(null) // [original, generated]
+  const [participantAccuracy, setParticipantAccuracy] = useState(null)
+
+  let images = []
+  for (let id = 1; id <= NUMIMAGES; id++) {
+    images.push(
+    {
+      img: require('../../images/pieces/' + id + '.jpg'),
+      key: id
+    }
+    );
+  }
 
   let generateGraphs = function() {
     let chart_options = []
-    for (let pair of image_pairs) {
-      chart_options.push({
+    for (let pair of image_pairs) { // individual valuation graphs
+      chart_options[pair[0]] = { // original
         title: {
-          text: "Average Valuation of ______",
-          fontFamily: "Raleway"
+          text: "Average Valuation Compared to Generated Image",
+          fontFamily: "Raleway",
+          fontSize: 20,
         },
         axisX: {
-          title: "Image",
+          title: "",
           reversed: true, 
-          titleFontFamily: "Raleway",
-          titleFontWeight: "normal",
           labelFontFamily: "Raleway" 
         },
         axisY: {
@@ -47,27 +65,130 @@ const GraphPage = (props) => {
         data: [{
           type: "bar",
           dataPoints: [
-            { label: "Original", y: averageValuations[pair[0] - 1] },
-            { label: "Generated", y: averageValuations[pair[1] - 1]}
-          ]
-        }]
-      })
+            { label: "This Image", y: averageValuations[pair[0] - 1] },
+            { label: `Generated Image (#${pair[1]})`, y: averageValuations[pair[1] - 1]}
+        ]}]
+      }
+      chart_options[pair[1]] = { // generated
+        title: {
+          text: "Average Valuation Compared to Original Image",
+          fontFamily: "Raleway",
+          fontSize: 20,
+        },
+        axisX: {
+          title: "",
+          reversed: true, 
+          labelFontFamily: "Raleway" 
+        },
+        axisY: {
+          title: "Average Valuation (normalized out of $10 million)",
+          minimum: 0,
+          titleFontFamily: "Raleway",
+          titleFontWeight: "normal",
+          labelFontFamily: "Raleway" 
+        },
+        toolTip: {
+          contentFormatter: (e) => `$${e.entries[0].dataPoint.y.toFixed(2)}`
+        },
+        data: [{
+          type: "bar",
+          dataPoints: [
+            { label: `Original Image (#${pair[0]})`, y: averageValuations[pair[0] - 1] },
+            { label: "This Image", y: averageValuations[pair[1] - 1]}
+        ]}]
+      }
+    }
+    chart_options[0] = { // overall
+      title: {
+        text: "Overall Average Valuation: Original vs. Generated",
+        fontFamily: "Raleway",
+        fontSize: 20,
+      },
+      axisX: {
+        title: "",
+        reversed: true, 
+        labelFontFamily: "Raleway" 
+      },
+      axisY: {
+        title: "Average Valuation (normalized out of $10 million)",
+        minimum: 0,
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" 
+      },
+      toolTip: {
+        contentFormatter: (e) => `$${e.entries[0].dataPoint.y.toFixed(2)}`
+      },
+      data: [{
+        type: "bar",
+        dataPoints: [
+          { label: "Original", y: overallValuation[0] },
+          { label: "Generated", y: averageValuations[1]}
+      ]}]
+    }
+    chart_options[25] = { // accuracy
+      title: {
+        text: "Accuracy on Identifying AI-Generated Images",
+        fontFamily: "Raleway",
+        fontSize: 20,
+      },
+      axisX: {
+        title: "Participant #",
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" 
+      },
+      axisY: {
+        title: "Accuracy (%)",
+        minimum: 0,
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" 
+      },
+      toolTip: {
+        contentFormatter: (e) => `${(e.entries[0].dataPoint.y * 100).toFixed(2)}%`
+      },
+      data: [{
+        type: "line",
+        dataPoints: participantAccuracy.map((item, i) => {return { label: i + 1, y: item}})
+      }]
     }
     setCoptions(chart_options)
+  }
+
+  let getAccuracyData = function(data) {
+    console.log(data)
+    let accuracy = new Array(24).fill(0);
+    let individual_accuracy = []
+    for (let entry of data) {
+      let curr_accuracy = 0
+      for (let i = 0; i < NUMIMAGES / 2; i++) {
+        accuracy[entry[i] - 1] += 1 // how many people identified this as generated, regardless of correctness
+        curr_accuracy += generatedImages.includes(entry[i]) ? 1 : 0
+      }
+      individual_accuracy.push(curr_accuracy / (NUMIMAGES / 2))
+    }
+    accuracy = accuracy.map((item, i) => generatedImages.includes(i + 1) ? item / data.length : 1 - item / data.length)
+    setAverageAccuracy(accuracy)
+    setParticipantAccuracy(individual_accuracy)
   }
 
   let getChartData = function(data) {
     let sums = new Array(24).fill(0); // sum of valuations of each image
     for (let entry of data) {
       for (let i = 0; i < 24; i++) {
-        sums[i] += entry[0][i]
+        sums[i] += entry[i]
       }
     }
-    let avg = sums.map((item) => item / data.length);
+    let avg = sums.map((item) => item / data.length); // average valuation per image
     setAverageValuations(avg)
-    // for (const pair of image_pairs) {
-    //   console.log(pair)
-    // }
+    let overall = [0, 0]
+    for (let i = 0; i < NUMIMAGES; i++) {
+      overall[generatedImages.includes(i + 1) ? 1 : 0] += avg[i]
+    }
+    console.log(overall)
+    overall = overall.map(item => item / (NUMIMAGES / 2))
+    setOverallValuation(overall)
   }
 
   let onLoad = (data, error) => {
@@ -122,14 +243,15 @@ const GraphPage = (props) => {
   }
 
   useEffect(() => {
-    if (averageValuations) {
+    if (averageValuations && overallValuation && participantAccuracy) {
       generateGraphs()
     }
-  }, [averageValuations])
+  }, [averageValuations, overallValuation, participantAccuracy])
 
   useEffect(() => {
     if (data !== null) {
-      getChartData(data)
+      getChartData(data.map(entry => entry[0]))
+      getAccuracyData(data.map(entry => entry[1]))
     }
   }, [data])
 
@@ -142,30 +264,40 @@ const GraphPage = (props) => {
   return (
     <div className="">
       <h1 className="graph-title">Let's take a look at the results.</h1>
-      {/* <Carousel variant="dark">
-        { coptions && coptions.map((option, i) => {
-          return (
-            <Carousel.Item key={i}>
-              <div className="chart">
-                <CanvasJSChart options={option} />
-              </div>
-              <br></br>
-              <Carousel.Caption>
-                <p>Title for graph {i}</p>
-                <p> hello??? </p>
-              </Carousel.Caption>
-            </Carousel.Item>
-          )
-        })}
-      </Carousel> */}
-
-      <div className="graph-container">
-        { coptions && coptions.map((option, i) => { 
-          return <div key={i}><CanvasJSChart options={option} /></div>
-        })
-        }
+      <p>Click an image to see more information!</p>
+      <div className="images-container">
+          {images.map((image, i) => {
+            return (<img
+                className="d-block image-sizing rounded mb-3"
+                src={image.img}
+                alt="slider image"
+                key={image.key}
+                onClick={() => {
+                  setActiveImage(image.key)
+                  setShow(true)
+                }}
+              />)
+          })}
       </div>
-      
+      <Modal show={show} onHide={() => setShow(false)} contentClassName="graph-modal">
+        <Modal.Header closeButton>
+          <Modal.Title style={{fontFamily: "Raleway"}}>Image Title</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <h3 className="graph-title">Valuation</h3>
+          <p>You valued this piece at $xx.xx.</p>
+          {averageValuations && <p>Average valuation: ${averageValuations[activeImage - 1].toFixed(2)}</p>}
+          {coptions && coptions[activeImage] && <CanvasJSChart options={coptions[activeImage]} />}
+          <br></br>
+          <h3 className="graph-title">Accuracy</h3>
+          <p>You (did/did not) correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>
+          {averageAccuracy && <p>Average accuracy for this image: {averageAccuracy[activeImage - 1]}</p>}
+        </Modal.Body>
+      </Modal>
+      <br></br>
+      {coptions && coptions[0] && <CanvasJSChart options={coptions[0]} />}
+      <br></br>
+      {coptions && coptions[25] && <CanvasJSChart options={coptions[25]} />}
     </div>
   );
 }

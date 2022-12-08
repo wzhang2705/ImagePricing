@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import React from 'react';
 import LandingPage from './components/landing-page/landing-page';
 import AuctionPage from './components/auction-page/auction-page';
 import GraphPage from './components/graph-page/graph-page';

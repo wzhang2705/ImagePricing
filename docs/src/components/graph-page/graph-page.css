@@ -33,7 +33,7 @@
 
 .graph-title {
     font-family: 'Raleway';
-    font-size: 2vw;
+    font-size: 2em;
     font-weight: 300;
     letter-spacing: 2pt;
 }
@@ -45,11 +45,7 @@
     grid-template-rows: auto auto auto auto auto auto; */
 }
 
-.chart {
-    width: 80% !important
-}
-
-.carousel-item {
-    text-align: center;
-    justify-content: center;
+.graph-modal {
+    width: 50em !important;
+    margin-left: -10em;
 }
