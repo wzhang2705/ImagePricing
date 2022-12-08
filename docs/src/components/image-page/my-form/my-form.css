@@ -1,0 +1,28 @@
+.forms-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    padding: 10px;
+}
+
+@media (mid-width: 100px) {
+    .forms-container { grid-template-columns: auto; }
+}
+
+@media (min-width: 200px) {
+    .forms-container { grid-template-columns: repeat(2, auto); }
+}
+
+@media (min-width: 600px) {
+    .forms-container { grid-template-columns: repeat(3, auto); }
+}
+
+@media (min-width: 900px) {
+    .forms-container { grid-template-columns: repeat(6, auto); }
+}
+
+.forms-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    text-align: center;
+    min-width: 150px;
+}
