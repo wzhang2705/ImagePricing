@@ -26,7 +26,7 @@ const AllImagesPage = (props) => {
     const navigate = useNavigate();
 
     const handleOnClick = () => {
-        navigate(props.basePath + '/end');
+        navigate(props.basePath + '/results');
     }
 
     const handleSubmit = () => {

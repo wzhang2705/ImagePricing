@@ -10,6 +10,10 @@ root.render(
     <App />
   </React.StrictMode>
 );
+const script = document.createElement("script")
+script.async = true;
+script.src = "https://apis.google.com/js/api.js";
+document.body.appendChild(script)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
