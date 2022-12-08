@@ -1,3 +1,4 @@
+import React from 'react';
 import './landing-page.css';
 import Rocket from "../../images/rocket-1.svg";
 import { BsArrowRight } from 'react-icons/bs';

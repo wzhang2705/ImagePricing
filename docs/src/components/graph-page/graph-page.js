@@ -12,7 +12,7 @@ const image_pairs = [
   [17, 9], [21, 10], [22, 11], [24, 19]
 ]
 
-const GraphPage = (props) => {
+const GraphPage = (props) => { 
   // const navigate = useNavigate();
   const [data, setData] = useState(null)
   const [averageValuations, setAverageValuations] = useState(null) // for individual average valuation graphs

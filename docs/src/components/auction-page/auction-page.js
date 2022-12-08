@@ -1,3 +1,4 @@
+import React from 'react';
 import './auction-page.css';
 import Artist from '../../images/101892-artist.gif';
 import { BsArrowRight } from 'react-icons/bs';
