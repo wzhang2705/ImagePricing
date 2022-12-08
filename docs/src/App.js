@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react';
 import LandingPage from './components/landing-page/landing-page';
 import AuctionPage from './components/auction-page/auction-page';
 import ImagePage from './components/image-page/image-page';
