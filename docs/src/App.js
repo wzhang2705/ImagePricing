@@ -1,6 +1,7 @@
 import './App.css';
 import LandingPage from './components/landing-page/landing-page';
 import AuctionPage from './components/auction-page/auction-page';
+import GraphPage from './components/graph-page/graph-page';
 import { BrowserRouter as Router,
   Routes,
   Route
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path={`${basePath}/`} element={<LandingPage basePath={`${basePath}`}/>} />
           <Route path={`${basePath}/begin`}  element={<AuctionPage/>} />
+          <Route path={`${basePath}/results`} element={<GraphPage />} />
         </Routes>
       </Router>
     </div>
