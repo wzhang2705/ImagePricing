@@ -3,6 +3,7 @@ import './graph-page.css';
 import React, { useEffect, useState } from 'react';
 import settings from "./config"
 import CanvasJSReact from './canvasjs.react'
+import Carousel from 'react-bootstrap/Carousel'
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -139,10 +140,25 @@ const GraphPage = (props) => {
   }, [])
 
   return (
-    <div className="graph">
-      <script async src="https://apis.google.com/js/api.js"></script>
-      <script async src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <div className="">
       <h1 className="graph-title">Let's take a look at the results.</h1>
+      {/* <Carousel variant="dark">
+        { coptions && coptions.map((option, i) => {
+          return (
+            <Carousel.Item key={i}>
+              <div className="chart">
+                <CanvasJSChart options={option} />
+              </div>
+              <br></br>
+              <Carousel.Caption>
+                <p>Title for graph {i}</p>
+                <p> hello??? </p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          )
+        })}
+      </Carousel> */}
+
       <div className="graph-container">
         { coptions && coptions.map((option, i) => { 
           return <div key={i}><CanvasJSChart options={option} /></div>
