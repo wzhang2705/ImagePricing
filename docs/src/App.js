@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import LandingPage from './components/landing-page/landing-page';
 import AuctionPage from './components/auction-page/auction-page';

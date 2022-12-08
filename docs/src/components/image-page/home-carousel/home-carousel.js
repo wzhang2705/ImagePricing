@@ -23,17 +23,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
         <Carousel className= "mh-50" activeIndex={index} onSelect={handleSelect}>
          {images.map((image, i) => {
           return (
-            <Carousel.Item>        
-          <div className="piece">
-            <img
-              className="d-block"
-              src={image.img}
-              alt="slider image"
-            />
-          </div>
-          <Carousel.Caption>
-            <p>Image #{i+1}</p>
-          </Carousel.Caption>
+            <Carousel.Item key={i}>        
+              <div className="piece">
+                <img
+                  className="d-block"
+                  src={image.img}
+                  alt={`slider ${i}`}
+                />
+              </div>
+            <Carousel.Caption>
+              <p>Image #{i+1}</p>
+            </Carousel.Caption>
           </Carousel.Item>
           
           )

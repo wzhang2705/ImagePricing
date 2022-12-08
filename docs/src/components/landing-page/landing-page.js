@@ -13,7 +13,7 @@ const LandingPage = (props) => {
   return (
     <div className = "landing">
         <div className="block">
-          <img src={Rocket} alt="Rocket Image" />
+          <img src={Rocket} alt="Rocket" />
         </div>
         <div className="block">
           <h1>Welcome!</h1>

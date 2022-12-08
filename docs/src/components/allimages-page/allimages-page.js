@@ -65,7 +65,7 @@ const AllImagesPage = (props) => {
             return (<img
                 className="d-block image-sizing rounded mb-3"
                 src={image.img}
-                alt="slider image"
+                alt={`slider ${i}`}
                 id={i+1}
                 onClick={handleOnClickImage}
               />)

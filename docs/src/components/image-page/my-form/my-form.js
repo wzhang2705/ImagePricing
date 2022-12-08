@@ -30,9 +30,9 @@ function MyForm(props) {
   
   const handleOnChange = (event) => {
     setValues(values.map((value, i) => {
-      if (i == event.target.id) {
+      if (i === event.target.id) {
         console.log(event.target.value);
-        if (event.target.value == "") {
+        if (event.target.value === "") {
           setRemaining(remaining + parseInt(value));
           return 0;
         } else {
@@ -47,7 +47,7 @@ function MyForm(props) {
   const rows = [];
   for (let id = 1; id <= NUMFORMS; id++) {
       rows.push(
-      <div className="forms-item">
+      <div className="forms-item" key={id}>
         <Form>
         <Form.Group className="mb-3" controlId={id}>
           <Form.Label>Image #{id}</Form.Label>
