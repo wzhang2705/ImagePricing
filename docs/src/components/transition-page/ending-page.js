@@ -1,6 +1,7 @@
 import './transition-page.css';
 import { BsArrowRight } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const EndingPage = (props) => {
   const navigate = useNavigate();

@@ -61,7 +61,7 @@ function MyForm(props) {
   return (
     <div>
       <p className="p-5 fw-bold fst-italic">For each piece, place a value between $0-$10M to indicate the approximate value you would give to it. 
-        Remember to ensure that all the values of the pieces adds up to $10M</p>
+        Remember to ensure that all the values of the pieces adds up to $10M.</p>
       <div className="forms-container">
         {rows}
       </div>

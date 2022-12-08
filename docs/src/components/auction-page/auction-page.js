@@ -2,6 +2,7 @@ import './auction-page.css';
 import Artist from '../../images/101892-artist.gif';
 import { BsArrowRight } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const AuctionPage = (props) => {
   const navigate = useNavigate();

@@ -1,4 +1,5 @@
 import './transition-page.css';
+import React from 'react';
 import { BsArrowRight } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
