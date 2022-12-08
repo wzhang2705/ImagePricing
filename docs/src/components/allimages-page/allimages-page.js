@@ -5,12 +5,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
 
 const NUMIMAGES = 24;
+const correctImages = [1, 2, 4, 5, 6, 8, 9, 10, 11, 14, 19, 20];
 
 const AllImagesPage = (props) => {
     var [selected, setSelected] = useState(0);
     var [show, setShow] = useState(false);
     var images = []
-
+    
     for (let id = 1; id <= NUMIMAGES; id++) {
         images.push(
         {
