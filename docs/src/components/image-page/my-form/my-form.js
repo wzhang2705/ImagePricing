@@ -46,8 +46,6 @@ function MyForm(props) {
 
   const rows = [];
   for (let id = 1; id <= NUMFORMS; id++) {
-      // note: we are adding a key prop here to allow react to uniquely identify each
-      // element in this array. see: https://reactjs.org/docs/lists-and-keys.html
       rows.push(
       <div className="forms-item">
         <Form>

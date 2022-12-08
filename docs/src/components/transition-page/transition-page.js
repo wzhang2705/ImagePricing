@@ -6,7 +6,7 @@ const TransitionPage = (props) => {
   const navigate = useNavigate();
 
   const handleOnClick = () => {
-      navigate(props.basePath + '/end');
+      navigate(props.basePath + '/allimages');
   } 
   return (
     <div className="transition-container">
