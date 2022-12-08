@@ -1,8 +1,15 @@
 import './auction-page.css';
 import Artist from '../../images/101892-artist.gif';
 import { BsArrowRight } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
-const AuctionPage = () => {
+const AuctionPage = (props) => {
+  const navigate = useNavigate();
+
+  const handleOnClick = () => {
+    navigate(props.basePath + '/image');
+  }
 
   return (
     <div className = "landing">
@@ -12,7 +19,7 @@ const AuctionPage = () => {
         <div className="block">
           <p>Imagine you are at an art auction. You’ve been given a total of $10M. 
             You have to spend it all over the following 24 pieces.</p>
-          <div className="begin">
+          <div className="begin" onClick={handleOnClick}>
             <div className="italicize">
               How will you allocate your money?
             </div>

@@ -2,6 +2,7 @@ import './landing-page.css';
 import Rocket from "../../images/rocket-1.svg";
 import { BsArrowRight } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const LandingPage = (props) => {
   const navigate = useNavigate();
