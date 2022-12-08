@@ -24,7 +24,7 @@ const AllImagesPage = (props) => {
 
     const handleOnClick = () => {
         if (selected === 12) {
-            navigate(props.basePath + '/end');
+            navigate(props.basePath + '/results');
         } else {
             setShow(true);
         }

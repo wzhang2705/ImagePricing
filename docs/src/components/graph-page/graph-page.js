@@ -1,13 +1,15 @@
 import './graph-page.css';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import settings from "./config"
 import CanvasJSReact from './canvasjs.react'
 import Modal from 'react-bootstrap/Modal'
+import { BsArrowRight } from 'react-icons/bs';
 
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const NUMIMAGES = 24;
+const NUMLIKERTQS = 4;
 
 const image_pairs = [
   [15, 1], [18, 2], [3, 14], [13, 4],
@@ -17,8 +19,31 @@ const image_pairs = [
 
 const generatedImages = [1, 2, 4, 5, 6, 8, 9, 10, 11, 14, 19, 20];
 
+const likertLabels = [
+  "I can tell the difference between artist pieces and AI-generated content.",
+  "AI-generated content and original artist pieces should be given equal value.",
+  "I prefer original artist pieces over AI-generated content.",
+  "I am invested in the art world.",
+]
+
+const likertLegend = [
+  "Strongly Disagree",
+  "Disagree",
+  "Neutral",
+  "Agree",
+  "Strongly Agree"
+]
+
+const likertColours = [
+  "#03045E",
+  "#0077B6",
+  "#00B4D8",
+  "#90E0EF",
+  "#CAF0F8",
+]
+
 const GraphPage = (props) => { 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [data, setData] = useState(null)
   const [averageValuations, setAverageValuations] = useState(null) // for individual average valuation graphs
   const [averageAccuracy, setAverageAccuracy] = useState(null) // accuracy
@@ -27,6 +52,11 @@ const GraphPage = (props) => {
   const [activeImage, setActiveImage] = useState(1)
   const [overallValuation, setOverallValuation] = useState(null) // [original, generated]
   const [participantAccuracy, setParticipantAccuracy] = useState(null)
+  const [likertData, setLikertData] = useState(null)
+
+  let handleOnClick = () => {
+    navigate(props.basePath + '/end')
+  }
 
   let images = []
   for (let id = 1; id <= NUMIMAGES; id++) {
@@ -65,8 +95,8 @@ const GraphPage = (props) => {
         data: [{
           type: "bar",
           dataPoints: [
-            { label: "This Image", y: averageValuations[pair[0] - 1] },
-            { label: `Generated Image (#${pair[1]})`, y: averageValuations[pair[1] - 1]}
+            { label: "This Image", y: averageValuations[pair[0] - 1], color: likertColours[1] },
+            { label: `Generated Image (#${pair[1]})`, y: averageValuations[pair[1] - 1], color: likertColours[3]}
         ]}]
       }
       chart_options[pair[1]] = { // generated
@@ -93,8 +123,8 @@ const GraphPage = (props) => {
         data: [{
           type: "bar",
           dataPoints: [
-            { label: `Original Image (#${pair[0]})`, y: averageValuations[pair[0] - 1] },
-            { label: "This Image", y: averageValuations[pair[1] - 1]}
+            { label: `Original Image (#${pair[0]})`, y: averageValuations[pair[0] - 1], color: likertColours[1] },
+            { label: "This Image", y: averageValuations[pair[1] - 1], color: likertColours[3]}
         ]}]
       }
     }
@@ -122,13 +152,13 @@ const GraphPage = (props) => {
       data: [{
         type: "bar",
         dataPoints: [
-          { label: "Original", y: overallValuation[0] },
-          { label: "Generated", y: averageValuations[1]}
+          { label: "Original", y: overallValuation[0], color: likertColours[1] },
+          { label: "Generated", y: averageValuations[1], color: likertColours[3]}
       ]}]
     }
     chart_options[25] = { // accuracy
       title: {
-        text: "Accuracy on Identifying AI-Generated Images",
+        text: `Accuracy on Identifying AI-Generated Images (Average Accuracy: ${(participantAccuracy.reduce((a, b) => a + b) / participantAccuracy.length * 100).toFixed(2)}%)`,
         fontFamily: "Raleway",
         fontSize: 20,
       },
@@ -150,14 +180,62 @@ const GraphPage = (props) => {
       },
       data: [{
         type: "line",
+        color: likertColours[2],
         dataPoints: participantAccuracy.map((item, i) => {return { label: i + 1, y: item}})
       }]
+    }
+    chart_options[26] = { // likert
+      title: {
+        text: "Likert Scale Ratings of Perceptions Towards AI-Generated Art",
+        fontFamily: "Raleway",
+        fontSize: 20,
+      },
+      legend: {
+        verticalAlign: "top"
+      },
+      axisX: {
+        labelFontFamily: "Raleway",
+        labelFormatter: (e) => `${likertLabels[e.value]}`
+      },
+      axisY: {
+        title: "Frequency of Rating",
+        minimum: 0,
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" 
+      },
+      toolTip: {
+        contentFormatter: (e) => `${e.entries[0].dataPoint.y}`
+      },
+      data: likertData.map((item, j) => {
+        return {
+          type: "stackedBar",
+          showInLegend: true,
+          legendText: likertLegend[j],
+          color: likertColours[j],
+          dataPoints: item.map((value, i) => {
+            return {
+              x: i,
+              y: value
+            }
+          })
+        }
+      })
     }
     setCoptions(chart_options)
   }
 
+  let getLikertData = function(data) {
+    let counts = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < NUMLIKERTQS; j++) {
+        counts[data[i][j] - 1][j] += 1
+      }
+    }
+    setLikertData(counts)
+  }
+
   let getAccuracyData = function(data) {
-    console.log(data)
     let accuracy = new Array(24).fill(0);
     let individual_accuracy = []
     for (let entry of data) {
@@ -186,7 +264,6 @@ const GraphPage = (props) => {
     for (let i = 0; i < NUMIMAGES; i++) {
       overall[generatedImages.includes(i + 1) ? 1 : 0] += avg[i]
     }
-    console.log(overall)
     overall = overall.map(item => item / (NUMIMAGES / 2))
     setOverallValuation(overall)
   }
@@ -243,15 +320,16 @@ const GraphPage = (props) => {
   }
 
   useEffect(() => {
-    if (averageValuations && overallValuation && participantAccuracy) {
+    if (averageValuations && overallValuation && participantAccuracy && likertData) {
       generateGraphs()
     }
-  }, [averageValuations, overallValuation, participantAccuracy])
+  }, [averageValuations, overallValuation, participantAccuracy, likertData])
 
   useEffect(() => {
     if (data !== null) {
       getChartData(data.map(entry => entry[0]))
       getAccuracyData(data.map(entry => entry[1]))
+      getLikertData(data.map(entry => entry[2]))
     }
   }, [data])
 
@@ -270,7 +348,7 @@ const GraphPage = (props) => {
             return (<img
                 className="d-block image-sizing rounded mb-3"
                 src={image.img}
-                alt="slider image"
+                alt={image.key}
                 key={image.key}
                 onClick={() => {
                   setActiveImage(image.key)
@@ -298,6 +376,18 @@ const GraphPage = (props) => {
       {coptions && coptions[0] && <CanvasJSChart options={coptions[0]} />}
       <br></br>
       {coptions && coptions[25] && <CanvasJSChart options={coptions[25]} />}
+      <br></br>
+      {coptions && coptions[26] && <CanvasJSChart options={coptions[26]} />}
+      <div className="continue" onClick={handleOnClick}>
+        <div className="italicize">
+          The End
+        </div>
+        <div className="arrow">
+          <div>
+            <BsArrowRight size={70}/>
+          </div>
+        </div>
+        </div>
     </div>
   );
 }
