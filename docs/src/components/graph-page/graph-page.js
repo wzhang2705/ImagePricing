@@ -1,7 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import './graph-page.css';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
 import settings from "../../config"
+import descriptions from "../../images/images"
 import CanvasJSReact from './canvasjs.react'
 import Modal from 'react-bootstrap/Modal'
 import { BsArrowRight } from 'react-icons/bs';
@@ -370,17 +371,30 @@ const GraphPage = (props) => {
       </div>
       <Modal show={show} onHide={() => setShow(false)} contentClassName="graph-modal">
         <Modal.Header closeButton>
-          <Modal.Title style={{fontFamily: "Raleway"}}>Image Title</Modal.Title>
+          <Modal.Title style={{fontFamily: "Raleway"}}>{descriptions[activeImage - 1].title} by {descriptions[activeImage - 1].artist} - {generatedImages.includes(activeImage) ? "Generated" : "Original"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <img
+            src={require(`../../images/pieces/${activeImage}.jpg`)}
+            alt={activeImage}
+          />
+          <h3>{" "}</h3>
+          <br></br>
+          <h3 className="graph-title">Image Description</h3>
+          <p>{descriptions[activeImage - 1].description}</p>
+          <br></br>
+          <h3 className="graph-title">Artist Description</h3>
+          <p>{descriptions[activeImage - 1].artist_description}</p>
+          <br></br>
           <h3 className="graph-title">Valuation</h3>
+          <p>The original valuation of this piece was ${descriptions[activeImage - 1].value}.</p>
           {userValuations && <p>You valued this piece at ${userValuations[activeImage - 1].toFixed(2)}.</p>}
           {averageValuations && <p>Average valuation: ${averageValuations[activeImage - 1].toFixed(2)}</p>}
           {coptions && coptions[activeImage] && <CanvasJSChart options={coptions[activeImage]} />}
           <br></br>
           <h3 className="graph-title">Accuracy</h3>
           {userAccuracy && <p>You did {userAccuracy[activeImage - 1] === 0? "not " : "" }correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>}
-          {averageAccuracy && <p>Average accuracy for this image: {averageAccuracy[activeImage - 1]}</p>}
+          {averageAccuracy && <p>Average accuracy for this image: {(averageAccuracy[activeImage - 1] * 100).toFixed(2)}%</p>}
         </Modal.Body>
       </Modal>
       <br></br>

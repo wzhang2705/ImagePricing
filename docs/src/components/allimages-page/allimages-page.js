@@ -44,8 +44,7 @@ const AllImagesPage = (props) => {
     }
 
     const handleOnClick = () => {
-      storeSelected()
-      navigate(props.basePath + '/results');
+        navigate(props.basePath + '/likert');
     }
 
     const handleSubmit = () => {
