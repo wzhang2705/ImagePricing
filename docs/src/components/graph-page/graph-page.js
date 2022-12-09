@@ -489,13 +489,32 @@ const GraphPage = (props) => {
         </Modal.Body>
       </Modal>
       <br></br>
+      <p className="fw-bold fst-italic p-3">First, we were mainly curious about the average valuation between 
+      original artist pieces and AI generated pieces.</p>
+      <br></br>
       {coptions && coptions[0] && <CanvasJSChart options={coptions[0]} />}
+      Our primarily results had indicated that AI generated content appeared 
+      <p className="fw-bold fst-italic p-3">Initial results had indicated that original content was favoured equally to AI-generated content.
+      With more recent results, it appears that AI generated content was valued much higher than original artist pieces, which was quite surprising.
+      To further explain why that might be, we wanted to explore
+      <span className="text-primary"> whether or not users can actually tell the difference between AI-generated and original human-made works.</span></p>
       <br></br>
       {coptions && coptions[25] && <CanvasJSChart options={coptions[25]} />}
+      <p className="fw-bold fst-italic p-3">With the overall average accuracy being only about 50%, we can conclude that most people cannot tell the difference
+      between AI-generated content and original artist pieces. This shows the great advancements that these generative models have made in recent years.
+      </p>
       <br></br>
+      <p className="fw-bold fst-italic p-3">
+      Finally, we wanted to collect some final question data to assess general user sentiments towards to the topic of art and AI.
+      </p>
       {coptions && coptions[26] && <CanvasJSChart options={coptions[26]} />}
-      <br></br>
-      {coptions && coptions[27] && <CanvasJSChart options={coptions[27]} />}
+      <p className="fw-bold fst-italic p-3">
+      Overall, it appears that our general demographic of surveyors are not very invested in the art world, which could have greatly impacted
+      our results of the accuracy of identifying AI vs humanmade works. From the next two questions, it appears that most people claim to prefer
+      original pieces over AI generated pieces, and believed they shouldn't be valued equally, suggesting that they would value original pieces more. This appears contrary to
+      our overall result of people valuing AI-generated pieces more. Ultimately, it comes back to the notion that people cannot tell the difference between AI and original
+      pieces. Finally, while our results show that people have low accuracies on detecting AI-generated images, <span className="text-primary">it appears that almost a quarter of people still believe that they
+       in fact CAN tell the difference.</span></p>
       <div className="continue" onClick={handleOnClick}>
         <div className="italicize">
           The End
