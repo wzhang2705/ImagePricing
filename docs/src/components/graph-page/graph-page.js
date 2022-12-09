@@ -367,6 +367,8 @@ const GraphPage = (props) => {
             src={require(`../../images/pieces/${activeImage}.jpg`)}
             alt={activeImage}
           />
+          <h3>{" "}</h3>
+          <br></br>
           <h3 className="graph-title">Image Description</h3>
           <p>{descriptions[activeImage - 1].description}</p>
           <br></br>
