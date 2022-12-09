@@ -40,6 +40,7 @@ const AllImagesPage = (props) => {
       }
       console.log(ret)
       localStorage.setItem("multiselect_data", ret.join(", "))
+      localStorage.setItem("user_multiselect", JSON.stringify(userSelected))
     }
 
     const handleOnClick = () => {

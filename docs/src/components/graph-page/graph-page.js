@@ -1,7 +1,7 @@
 import './graph-page.css';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import settings from "./config"
+import settings from "../../config"
 import CanvasJSReact from './canvasjs.react'
 import Modal from 'react-bootstrap/Modal'
 import { BsArrowRight } from 'react-icons/bs';
@@ -53,6 +53,8 @@ const GraphPage = (props) => {
   const [overallValuation, setOverallValuation] = useState(null) // [original, generated]
   const [participantAccuracy, setParticipantAccuracy] = useState(null)
   const [likertData, setLikertData] = useState(null)
+  const [userValuations, setUserValuations] = useState(null)
+  const [userAccuracy, setUserAccuracy] = useState(null)
 
   let handleOnClick = () => {
     navigate(props.basePath + '/end')
@@ -269,7 +271,12 @@ const GraphPage = (props) => {
   }
 
   let onLoad = (data, error) => {
-    if (data) { 
+    if (data) {
+      let user_data = JSON.parse(localStorage.getItem("valuation_data"))
+      user_data.push(localStorage.getItem("multiselect_data"))
+      user_data = user_data.concat([1, 1, 1, 1]) // likert data
+      console.log(user_data)
+      data.push(user_data)
       processData(data)
     } else {
       console.log(error)
@@ -294,6 +301,10 @@ const GraphPage = (props) => {
       return ret
     })
     setData(processed_data)
+
+    // get user data
+    setUserValuations(JSON.parse(localStorage.getItem("valuation_data")))
+    setUserAccuracy(JSON.parse(localStorage.getItem("user_multiselect")))
   }
 
   let load = function(callback) {
@@ -363,12 +374,12 @@ const GraphPage = (props) => {
         </Modal.Header>
         <Modal.Body>
           <h3 className="graph-title">Valuation</h3>
-          <p>You valued this piece at $xx.xx.</p>
+          {userValuations && <p>You valued this piece at ${userValuations[activeImage - 1].toFixed(2)}.</p>}
           {averageValuations && <p>Average valuation: ${averageValuations[activeImage - 1].toFixed(2)}</p>}
           {coptions && coptions[activeImage] && <CanvasJSChart options={coptions[activeImage]} />}
           <br></br>
           <h3 className="graph-title">Accuracy</h3>
-          <p>You (did/did not) correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>
+          {userAccuracy && <p>You did {userAccuracy[activeImage - 1] === 0? "not " : "" }correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>}
           {averageAccuracy && <p>Average accuracy for this image: {averageAccuracy[activeImage - 1]}</p>}
         </Modal.Body>
       </Modal>
