@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import Likert from 'react-likert-scale';
 
 const LikertScale = (props) => {
-  var [value, setValue] = useState(0);
+  // begin at neutral
+  var [value, setValue] = useState(3);
   const likertOptions = {
     question: null,
     responses: [
@@ -15,7 +16,10 @@ const LikertScale = (props) => {
     ],
     onChange: val => {
       // update the value indicated by the likert scale
+      // console.log(val.value);
       setValue(val.value);
+      // set the value of that question to the updated value
+      localStorage.setItem(props.qNum, val.value);
     }
   };
   return (

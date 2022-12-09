@@ -26,11 +26,7 @@ const AllImagesPage = (props) => {
     const navigate = useNavigate();
 
     const handleOnClick = () => {
-<<<<<<< HEAD
         navigate(props.basePath + '/likert');
-=======
-        navigate(props.basePath + '/results');
->>>>>>> main
     }
 
     const handleSubmit = () => {
