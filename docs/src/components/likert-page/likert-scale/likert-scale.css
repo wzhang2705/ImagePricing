@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+
+fieldset.likertScale .likertIndicator {
+    border: thin solid rgb(50, 50, 50);
+    background-color: lightGray;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+fieldset.likertScale {
+    font-family: 'Raleway';
+}
+
+fieldset.likertScale .likertLine {
+    border-top: 3px solid white;
+}
