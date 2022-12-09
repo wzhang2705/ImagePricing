@@ -392,14 +392,14 @@ const GraphPage = (props) => {
           <p>{descriptions[activeImage - 1].artist_description}</p>
           <br></br>
           <h3 className="graph-title">Valuation</h3>
-          <p>The original valuation of this piece was ${descriptions[activeImage - 1].value}.</p>
-          {userValuations && <p>You valued this piece at ${userValuations[activeImage - 1].toFixed(2)}.</p>}
-          {averageValuations && <p>Average valuation: ${averageValuations[activeImage - 1].toFixed(2)}</p>}
+          <p>The original valuation of this piece was <span className="fw-bold">${descriptions[activeImage - 1].value}.</span></p>
+          {userValuations && <p>You valued this piece at <span className="fw-bold text-primary">${userValuations[activeImage - 1].toFixed(2)}.</span></p>}
+          {averageValuations && <p>Average valuation: <span className="fw-bold">${averageValuations[activeImage - 1].toFixed(2)}</span></p>}
           {coptions && coptions[activeImage] && <CanvasJSChart options={coptions[activeImage]} />}
           <br></br>
           <h3 className="graph-title">Accuracy</h3>
-          {userAccuracy && <p>You did {userAccuracy[activeImage - 1] === 0? "not " : "" }correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>}
-          {averageAccuracy && <p>Average accuracy for this image: {(averageAccuracy[activeImage - 1] * 100).toFixed(2)}%</p>}
+          {userAccuracy && <p>You {userAccuracy[activeImage - 1] === 0? <span className="fw-bold text-danger">did not </span> : <span className="fw-bold text-success">did </span> }correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>}
+          {averageAccuracy && <p>Average accuracy for this image: <span className="fw-bold">{(averageAccuracy[activeImage - 1] * 100).toFixed(2)}%</span></p>}
         </Modal.Body>
       </Modal>
       <br></br>
