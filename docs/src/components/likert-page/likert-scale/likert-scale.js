@@ -5,6 +5,7 @@ import Likert from 'react-likert-scale';
 const LikertScale = (props) => {
   // begin at neutral
   var [value, setValue] = useState(3);
+  localStorage.setItem(props.qNum, value)
   const likertOptions = {
     question: null,
     responses: [
