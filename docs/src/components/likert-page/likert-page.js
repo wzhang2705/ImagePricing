@@ -24,7 +24,7 @@ const LikertPage = (props) => {
             </div>
             <div className="begin float-end" onClick={handleOnClick}>
             <div className="italicize">
-              Go next
+              Let's check out the results!
             </div>
             <div className="arrow">
               <div>
