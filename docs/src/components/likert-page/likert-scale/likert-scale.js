@@ -1,8 +1,9 @@
 import "./likert-scale.css";
-import React from "react";
+import React, { useState } from "react";
 import Likert from 'react-likert-scale';
 
 const LikertScale = (props) => {
+  var [value, setValue] = useState(0);
   const likertOptions = {
     question: null,
     responses: [
@@ -13,7 +14,8 @@ const LikertScale = (props) => {
       { value: 5, text: "Strongly Agree" }
     ],
     onChange: val => {
-      console.log(val);
+      // update the value indicated by the likert scale
+      setValue(val.value);
     }
   };
   return (
