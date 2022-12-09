@@ -57,6 +57,7 @@ const GraphPage = (props) => {
   const [likertData, setLikertData] = useState(null)
   const [userValuations, setUserValuations] = useState(null)
   const [userAccuracy, setUserAccuracy] = useState(null)
+  const [perceivedValuation, setPerceivedValuation] = useState(null)
 
   let handleOnClick = () => {
     navigate(props.basePath + '/end')
@@ -70,6 +71,16 @@ const GraphPage = (props) => {
       key: id
     }
     );
+  }
+
+  let getPreferenceData = function(valuations, preferences) {
+    let overall = [0, 0]
+    for (let i = 0; i < valuations.length; i++) {
+      for (let j = 0; j < NUMIMAGES; j++) {
+        overall[preferences[i].includes(j + 1) ? 1 : 0] += valuations[i][j]
+      }
+    }
+    setPerceivedValuation(overall)
   }
 
   let calculateLOBF = function(values_x, values_y) { // basic linear regression
@@ -195,7 +206,7 @@ const GraphPage = (props) => {
         type: "bar",
         dataPoints: [
           { label: "Original", y: overallValuation[0], color: likertColours[1] },
-          { label: "Generated", y: averageValuations[1], color: likertColours[3]}
+          { label: "Generated", y: overallValuation[1], color: likertColours[3]}
       ]}]
     }
     chart_options[25] = { // accuracy
@@ -311,6 +322,36 @@ const GraphPage = (props) => {
         }
       ]
     }
+    chart_options[28] = { // perceived valuation
+      title: {
+        text: "Overall Valuation: Perceived as Original vs. Generated",
+        fontFamily: "Raleway",
+        fontSize: 20,
+      },
+      axisX: {
+        title: "Perception",
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        reversed: true, 
+        labelFontFamily: "Raleway" 
+      },
+      axisY: {
+        title: "Total Valuation (normalized out of $10 million)",
+        minimum: 0,
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" 
+      },
+      toolTip: {
+        contentFormatter: (e) => `$${e.entries[0].dataPoint.y.toFixed(2)}`
+      },
+      data: [{
+        type: "bar",
+        dataPoints: [
+          { label: "Original", y: perceivedValuation[0], color: likertColours[1] },
+          { label: "Generated", y: perceivedValuation[1], color: likertColours[3]}
+      ]}]
+    }
     setCoptions(chart_options)
   }
 
@@ -423,16 +464,17 @@ const GraphPage = (props) => {
   }
 
   useEffect(() => {
-    if (averageValuations && overallValuation && participantAccuracy && likertData) {
+    if (averageValuations && overallValuation && participantAccuracy && likertData && perceivedValuation) {
       generateGraphs()
     }
-  }, [averageValuations, overallValuation, participantAccuracy, likertData])
+  }, [averageValuations, overallValuation, participantAccuracy, likertData, perceivedValuation])
 
   useEffect(() => {
     if (data !== null) {
       getChartData(data.map(entry => entry[0]))
       getAccuracyData(data.map(entry => entry[1]))
       getLikertData(data.map(entry => entry[2]))
+      getPreferenceData(data.map(entry => entry[0]), data.map(entry => entry[1]))
     }
   }, [data])
 
@@ -493,7 +535,6 @@ const GraphPage = (props) => {
       original artist pieces and AI generated pieces.</p>
       <br></br>
       {coptions && coptions[0] && <CanvasJSChart options={coptions[0]} />}
-      Our primarily results had indicated that AI generated content appeared 
       <p className="fw-bold fst-italic p-3">Initial results had indicated that original content was favoured equally to AI-generated content.
       With more recent results, it appears that AI generated content was valued much higher than original artist pieces, which was quite surprising.
       To further explain why that might be, we wanted to explore
@@ -514,8 +555,16 @@ const GraphPage = (props) => {
       original pieces over AI generated pieces, and believed they shouldn't be valued equally, suggesting that they would value original pieces more. This appears contrary to
       our overall result of people valuing AI-generated pieces more. Ultimately, it comes back to the notion that people cannot tell the difference between AI and original
       pieces. Finally, while our results show that people have low accuracies on detecting AI-generated images, <span className="text-primary">it appears that almost a quarter of people still believe that they
-       in fact CAN tell the difference.</span></p>
+      in fact CAN tell the difference.</span></p>
+      <p className="fw-bold fst-italic p-3">
+        We tried to find a correlation between how able a participant thought they were at differentiating between original and AI-generated images and their actual accuracy, and found that there was a fairly weak correlation between the two.
+      </p>
       {coptions && coptions[27] && <CanvasJSChart options={coptions[27]} />}
+      <p className="fw-bold fst-italic p-3">
+        We also explored participants' valuation behaviour based on the images that they thought were generated, and we found that regardless of whether or not they were correct, they valued pieces that they thought were original <span className="text-primary">much higher</span> than those that they thought were 
+        AI-generated. This makes sense alongside our Likert Scale data, where most participants stated that they enjoyed original artist pieces over AI-generated content.
+      </p>
+      {coptions && coptions[28] && <CanvasJSChart options={coptions[28]} />}
       <div className="continue" onClick={handleOnClick}>
         <div className="italicize">
           The End
