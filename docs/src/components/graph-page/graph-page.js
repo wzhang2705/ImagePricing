@@ -515,6 +515,7 @@ const GraphPage = (props) => {
       our overall result of people valuing AI-generated pieces more. Ultimately, it comes back to the notion that people cannot tell the difference between AI and original
       pieces. Finally, while our results show that people have low accuracies on detecting AI-generated images, <span className="text-primary">it appears that almost a quarter of people still believe that they
        in fact CAN tell the difference.</span></p>
+      {coptions && coptions[27] && <CanvasJSChart options={coptions[27]} />}
       <div className="continue" onClick={handleOnClick}>
         <div className="italicize">
           The End
