@@ -1,7 +1,8 @@
-import './App.css';
 import React from 'react';
+import './App.css';
 import LandingPage from './components/landing-page/landing-page';
 import AuctionPage from './components/auction-page/auction-page';
+import GraphPage from './components/graph-page/graph-page';
 import ImagePage from './components/image-page/image-page';
 import AllImagesPage from './components/allimages-page/allimages-page';
 import LikertPage from './components/likert-page/likert-page';
@@ -24,6 +25,7 @@ function App() {
           <Route path={`${basePath}/bigreveal`} element={<TransitionPage basePath={`${basePath}`}/>} />
           <Route path={`${basePath}/allimages`} element={<AllImagesPage basePath={`${basePath}`}/>} />
           <Route path={`${basePath}/likert`} element={<LikertPage basePath={`${basePath}`}/>} />
+          <Route path={`${basePath}/results`} element={<GraphPage basePath={`${basePath}`} />} />
           <Route path={`${basePath}/end`} element={<EndingPage basePath={`${basePath}`}/>} />
         </Routes>
       </Router>
