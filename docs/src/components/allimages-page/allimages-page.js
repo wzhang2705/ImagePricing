@@ -44,8 +44,12 @@ const AllImagesPage = (props) => {
     }
 
     const handleOnClick = () => {
-      storeSelected()
-      navigate(props.basePath + '/likert');
+      if (selected === 12) {
+        storeSelected()
+        navigate(props.basePath + '/likert');
+      } else {
+        setShow(true);
+      }
     }
 
     const handleSubmit = () => {
