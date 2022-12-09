@@ -53,6 +53,7 @@ const GraphPage = (props) => {
   const [activeImage, setActiveImage] = useState(1)
   const [overallValuation, setOverallValuation] = useState(null) // [original, generated]
   const [participantAccuracy, setParticipantAccuracy] = useState(null)
+  const [confidence, setConfidence] = useState(null)
   const [likertData, setLikertData] = useState(null)
   const [userValuations, setUserValuations] = useState(null)
   const [userAccuracy, setUserAccuracy] = useState(null)
@@ -71,8 +72,46 @@ const GraphPage = (props) => {
     );
   }
 
+  let calculateLOBF = function(values_x, values_y) { // basic linear regression
+    var x_sum = 0;
+    var y_sum = 0;
+    var xy_sum = 0;
+    var xx_sum = 0;
+    var count = 0;
+    var x = 0;
+    var y = 0;
+    var values_length = values_x.length;
+    if (values_length === 0) {
+        return [ [], [] ];
+    }
+    for (let i = 0; i< values_length; i++) {
+        x = values_x[i];
+        y = values_y[i];
+        x_sum+= x;
+        y_sum+= y;
+        xx_sum += x*x;
+        xy_sum += x*y;
+        count++;
+    }
+    var m = (count*xy_sum - x_sum*y_sum) / (count*xx_sum - x_sum*x_sum);
+    var b = (y_sum/count) - (m*x_sum)/count;
+    var result_values_x = [];
+    var result_values_y = [];
+
+    for (let i = 0; i < values_length; i++) {
+        x = values_x[i];
+        y = x * m + b;
+        result_values_x.push(x);
+        result_values_y.push(y);
+    }
+
+    return [result_values_x, result_values_y];
+  }
+
   let generateGraphs = function() {
     let chart_options = []
+    let lobf = calculateLOBF(participantAccuracy, confidence)
+    console.log(lobf)
     for (let pair of image_pairs) { // individual valuation graphs
       chart_options[pair[0]] = { // original
         title: {
@@ -197,8 +236,9 @@ const GraphPage = (props) => {
         verticalAlign: "top"
       },
       axisX: {
+        reversed: true,
         labelFontFamily: "Raleway",
-        labelFormatter: (e) => `${likertLabels[e.value]}`
+        labelFormatter: (e) => `Q${e.value + 1}: ${likertLabels[e.value]}`
       },
       axisY: {
         title: "Frequency of Rating",
@@ -225,6 +265,52 @@ const GraphPage = (props) => {
         }
       })
     }
+    chart_options[27] = { // accuracy vs confidence
+      title: {
+        text: "Accuracy vs. Perceived Ability to Tell the Difference between Original and Generated Images",
+        fontFamily: "Raleway",
+        fontSize: 20,
+      },
+      axisX: {
+        title: "Accuracy",
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway",
+        minimum: 0,
+        maximum: 1,
+      },
+      axisY: {
+        title: "Q1 Response",
+        minimum: 0,
+        maximum: 6,
+        titleFontFamily: "Raleway",
+        titleFontWeight: "normal",
+        labelFontFamily: "Raleway" ,
+      },
+      data: [
+        {
+          type: "scatter",
+          dataPoints: participantAccuracy.map((item, i) => {
+            return {
+              x: item, 
+              y: confidence[i], 
+              color: likertColours[confidence[i] - 1]
+            }
+          })
+        },
+        {
+          type: "line",
+          dataPoints: lobf[0].map((item, i) => {
+            return {
+              x: item, 
+              y: lobf[1][i],
+              markerType: "none",
+              lineColor: likertColours[2]
+            }
+          })
+        }
+      ]
+    }
     setCoptions(chart_options)
   }
 
@@ -235,6 +321,7 @@ const GraphPage = (props) => {
         counts[data[i][j] - 1][j] += 1
       }
     }
+    setConfidence(data.map(item => item[0]))
     setLikertData(counts)
   }
 
@@ -281,7 +368,6 @@ const GraphPage = (props) => {
         parseInt(localStorage.getItem("q3")), 
         parseInt(localStorage.getItem("q4"))
       ])
-      console.log(user_data)
       data.push(user_data)
       processData(data)
     } else {
@@ -429,6 +515,7 @@ const GraphPage = (props) => {
       our overall result of people valuing AI-generated pieces more. Ultimately, it comes back to the notion that people cannot tell the difference between AI and original
       pieces. Finally, while our results show that people have low accuracies on detecting AI-generated images, <span className="text-primary">it appears that almost a quarter of people still believe that they
        in fact CAN tell the difference.</span></p>
+      {coptions && coptions[27] && <CanvasJSChart options={coptions[27]} />}
       <div className="continue" onClick={handleOnClick}>
         <div className="italicize">
           The End
