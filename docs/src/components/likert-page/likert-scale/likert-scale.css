@@ -1,0 +1,9 @@
+fieldset.likertScale .likertIndicator {
+    border: thin solid darkGreen;
+    background-color: lightGray;
+}
+
+fieldset.likertScale .likertIndicator:active {
+    border: thin solid darkGreen;
+    background-color: lightGray;
+}
