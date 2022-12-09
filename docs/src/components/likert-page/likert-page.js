@@ -22,6 +22,16 @@ const LikertPage = (props) => {
                 <LikertScale msg="I prefer original artist pieces over AI-generated content." qNum="q3"/>
                 <LikertScale msg="I am invested in the art world." qNum="q4"/>
             </div>
+            <div className="begin float-end" onClick={handleOnClick}>
+            <div className="italicize">
+              Go next
+            </div>
+            <div className="arrow">
+              <div>
+                <BsArrowRight size={70}/>
+              </div>
+            </div>
+          </div>
         </div>
     );
 
