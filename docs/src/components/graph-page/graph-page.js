@@ -275,7 +275,12 @@ const GraphPage = (props) => {
     if (data) {
       let user_data = JSON.parse(localStorage.getItem("valuation_data"))
       user_data.push(localStorage.getItem("multiselect_data"))
-      user_data = user_data.concat([1, 1, 1, 1]) // likert data
+      user_data = user_data.concat([
+        parseInt(localStorage.getItem("q1")), 
+        parseInt(localStorage.getItem("q2")), 
+        parseInt(localStorage.getItem("q3")), 
+        parseInt(localStorage.getItem("q4"))
+      ])
       console.log(user_data)
       data.push(user_data)
       processData(data)
