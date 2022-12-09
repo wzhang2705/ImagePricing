@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './graph-page.css';
 import { useNavigate } from 'react-router-dom';
-import settings from "./config"
+import settings from "../../config"
 import descriptions from "../../images/images"
 import CanvasJSReact from './canvasjs.react'
 import Modal from 'react-bootstrap/Modal'
@@ -54,6 +54,8 @@ const GraphPage = (props) => {
   const [overallValuation, setOverallValuation] = useState(null) // [original, generated]
   const [participantAccuracy, setParticipantAccuracy] = useState(null)
   const [likertData, setLikertData] = useState(null)
+  const [userValuations, setUserValuations] = useState(null)
+  const [userAccuracy, setUserAccuracy] = useState(null)
 
   let handleOnClick = () => {
     navigate(props.basePath + '/end')
@@ -270,7 +272,17 @@ const GraphPage = (props) => {
   }
 
   let onLoad = (data, error) => {
-    if (data) { 
+    if (data) {
+      let user_data = JSON.parse(localStorage.getItem("valuation_data"))
+      user_data.push(localStorage.getItem("multiselect_data"))
+      user_data = user_data.concat([
+        parseInt(localStorage.getItem("q1")), 
+        parseInt(localStorage.getItem("q2")), 
+        parseInt(localStorage.getItem("q3")), 
+        parseInt(localStorage.getItem("q4"))
+      ])
+      console.log(user_data)
+      data.push(user_data)
       processData(data)
     } else {
       console.log(error)
@@ -295,6 +307,10 @@ const GraphPage = (props) => {
       return ret
     })
     setData(processed_data)
+
+    // get user data
+    setUserValuations(JSON.parse(localStorage.getItem("valuation_data")))
+    setUserAccuracy(JSON.parse(localStorage.getItem("user_multiselect")))
   }
 
   let load = function(callback) {
@@ -376,14 +392,14 @@ const GraphPage = (props) => {
           <p>{descriptions[activeImage - 1].artist_description}</p>
           <br></br>
           <h3 className="graph-title">Valuation</h3>
-          <p>The original valuation of this piece was ${descriptions[activeImage - 1].value}.</p>
-          <p>You valued this piece at $xx.xx.</p>
-          {averageValuations && <p>Average valuation: ${averageValuations[activeImage - 1].toFixed(2)}</p>}
+          <p>The original valuation of this piece was <span className="fw-bold">${descriptions[activeImage - 1].value}.</span></p>
+          {userValuations && <p>You valued this piece at <span className="fw-bold text-primary">${userValuations[activeImage - 1].toFixed(2)}.</span></p>}
+          {averageValuations && <p>Average valuation: <span className="fw-bold">${averageValuations[activeImage - 1].toFixed(2)}</span></p>}
           {coptions && coptions[activeImage] && <CanvasJSChart options={coptions[activeImage]} />}
           <br></br>
           <h3 className="graph-title">Accuracy</h3>
-          <p>You (did/did not) correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>
-          {averageAccuracy && <p>Average accuracy for this image: {(averageAccuracy[activeImage - 1] * 100).toFixed(2)}%</p>}
+          {userAccuracy && <p>You {userAccuracy[activeImage - 1] === 0? <span className="fw-bold text-danger">did not </span> : <span className="fw-bold text-success">did </span> }correctly identify this piece as {generatedImages.includes(activeImage) ? "generated" : "original"}.</p>}
+          {averageAccuracy && <p>Average accuracy for this image: <span className="fw-bold">{(averageAccuracy[activeImage - 1] * 100).toFixed(2)}%</span></p>}
         </Modal.Body>
       </Modal>
       <br></br>

@@ -13,6 +13,12 @@ const AllImagesPage = (props) => {
     var [show, setShow] = useState(false);
     var [showAccuracy, setShowAccuracy] = useState(false);
     var [accuracy, setAccuracy] = useState(0);
+    const [userSelected, setUserSelected] = useState([
+      0,0,0,0,0,0,
+      0,0,0,0,0,0,
+      0,0,0,0,0,0,
+      0,0,0,0,0,0
+    ]);
     var images = []
 
     for (let id = 1; id <= NUMIMAGES; id++) {
@@ -25,8 +31,21 @@ const AllImagesPage = (props) => {
 
     const navigate = useNavigate();
 
+    let storeSelected = function() {
+      let ret = [];
+      for (let i = 0; i < 24; i++) {
+        if (userSelected[i] === 1) {
+          ret.push(i + 1)
+        }
+      }
+      console.log(ret)
+      localStorage.setItem("multiselect_data", ret.join(", "))
+      localStorage.setItem("user_multiselect", JSON.stringify(userSelected))
+    }
+
     const handleOnClick = () => {
-        navigate(props.basePath + '/likert');
+      storeSelected()
+      navigate(props.basePath + '/likert');
     }
 
     const handleSubmit = () => {
@@ -38,39 +57,43 @@ const AllImagesPage = (props) => {
     }
 
     const handleOnClickImage = (event) => {
-        setShow(false);
-        setShowAccuracy(false);
-        console.log(event);
-        if (event.target.style.border === "3px solid rgb(39, 118, 230)") {
-            setSelected(selected - 1);
-            if (correctImages.includes(parseInt(event.target.id))) {
-                setAccuracy(accuracy - 1);
-            }
-            event.target.style.border = "none";
-        } else {
-            setSelected(selected + 1);
-            if (correctImages.includes(parseInt(event.target.id))) {
-                setAccuracy(accuracy + 1);
-            }
-            event.target.style.border = "3px solid rgb(39, 118, 230)";
+      setShow(false);
+      setShowAccuracy(false);
+      let temp = userSelected
+      if (event.target.style.border === "3px solid rgb(39, 118, 230)") {
+        setSelected(selected - 1);
+        if (correctImages.includes(parseInt(event.target.id))) {
+            setAccuracy(accuracy - 1);
         }
+        event.target.style.border = "none";
+        temp[parseInt(event.target.id) - 1] = 0
+      } else {
+        setSelected(selected + 1);
+        if (correctImages.includes(parseInt(event.target.id))) {
+            setAccuracy(accuracy + 1);
+        }
+        event.target.style.border = "3px solid rgb(39, 118, 230)";
+        temp[parseInt(event.target.id) - 1] = 1
+      }
+      setUserSelected(temp)
     }
 
     return (
         <div>
           <h1 className="pb-1">Take another look at all the pieces</h1>
           <h1 className="pb-5">Which ones do you think are AI-generated?</h1>
-        <div className="images-container">
-          {images.map((image, i) => {
-            return (<img
-                className="d-block image-sizing rounded mb-3"
-                src={image.img}
-                alt="slider image"
-                id={i+1}
-                onClick={handleOnClickImage}
-              />)
-          })}
-        </div>
+          <div className="images-container">
+            {images.map((image, i) => {
+              return (<img
+                  className="d-block image-sizing rounded mb-3"
+                  src={image.img}
+                  alt={`slider ${i}`}
+                  id={i + 1}
+                  key={i}
+                  onClick={handleOnClickImage}
+                />)
+            })}
+          </div>
           <p>You've selected
             <span className="fw-bold"> {selected} </span>
             pieces so far.</p>

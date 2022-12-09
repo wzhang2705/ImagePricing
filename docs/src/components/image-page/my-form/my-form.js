@@ -7,39 +7,41 @@ import { useNavigate } from 'react-router-dom';
 const NUMFORMS = 24;
 
 function MyForm(props) {
-  const navigate = useNavigate();
-
-  const handleOnClick = () => {
-    if (remaining === 0) {
-      setIsShown(false);
-      navigate(props.basePath + '/bigreveal');
-    } else {
-      setIsShown(true);
-    }
-  }
-
   const [values, setValues] = useState([
     0,0,0,0,0,0,
     0,0,0,0,0,0,
     0,0,0,0,0,0,
     0,0,0,0,0,0
   ]);
-
   var [remaining, setRemaining] = useState(10000000);
   var [isShown, setIsShown] = useState(false);
+  const navigate = useNavigate();
+
+  let handleSubmit = function() {
+    localStorage.setItem("valuation_data", JSON.stringify(values))
+  }
+
+  const handleOnClick = () => {
+    if (remaining === 0) {
+      setIsShown(false);
+      handleSubmit()
+      navigate(props.basePath + '/bigreveal');
+    } else {
+      setIsShown(true);
+    }
+  }
   
   const handleOnChange = (event) => {
     setValues(values.map((value, i) => {
-      if (i == event.target.id) {
-        console.log(event.target.value);
-        if (event.target.value == "") {
+      if (parseInt(event.target.id) - 1 === i) {
+        if (event.target.value === "") {
           setRemaining(remaining + parseInt(value));
           return 0;
         } else {
           setRemaining(remaining + parseInt(value) - parseInt(event.target.value));
-          return event.target.value;
+          return parseInt(event.target.value);
         }
-      } else return value;
+      } else return parseInt(value);
     }))
     setIsShown(false);
   }
@@ -47,12 +49,12 @@ function MyForm(props) {
   const rows = [];
   for (let id = 1; id <= NUMFORMS; id++) {
       rows.push(
-      <div className="forms-item">
+      <div className="forms-item" key={id}>
         <Form>
-        <Form.Group className="mb-3" controlId={id}>
-          <Form.Label>Image #{id}</Form.Label>
-          <Form.Control type="number" min="0" max="10000000" data-bind="value:replyNumber" placeholder="0" onChange={handleOnChange} />
-        </Form.Group>
+          <Form.Group className="mb-3" controlId={id}>
+            <Form.Label>Image #{id}</Form.Label>
+            <Form.Control type="number" min="0" max="10000000" data-bind="value:replyNumber" placeholder="0" onChange={handleOnChange} />
+          </Form.Group>
         </Form>
       </div>
       );
