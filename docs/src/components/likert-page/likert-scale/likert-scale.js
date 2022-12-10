@@ -29,7 +29,7 @@ const LikertScale = (props) => {
             <p className="d-block mw-50 float-left">{props.msg}</p>
         </div>
         <div className="w-50">
-            <Likert {...likertOptions} />
+            <Likert {...likertOptions} id={props.qNum} />
         </div>
     </div>
   )
